@@ -1,0 +1,16 @@
+{{| class="wikitable"
+|-
+! Stat. Größe !! Anmeldedatum !! Beitragszahl !! Beitragszahl (Hauptnamensraum) !! Beitragszahl (Hauptnamensraum, letztes Jahr)
+|-
+| [[Extremwert|min]] || {pseudo_registration_min} || {user_editcount_min} || {user_editcount_ns0_all_time_min} || {user_editcount_ns0_last_year_min}
+|-
+| [[Quantil (Wahrscheinlichkeitstheorie)#Perzentil|25 %]] || {pseudo_registration_25%} || {user_editcount_25%} || {user_editcount_ns0_all_time_25%} || {user_editcount_ns0_last_year_25%}
+|-
+| [[Median]] || {pseudo_registration_50%} || {user_editcount_50%} || {user_editcount_ns0_all_time_50%} || {user_editcount_ns0_last_year_50%}
+|-
+| [[Quantil (Wahrscheinlichkeitstheorie)#Perzentil|75 %]] || {pseudo_registration_75%} || {user_editcount_75%} || {user_editcount_ns0_all_time_75%} || {user_editcount_ns0_last_year_75%}
+|-
+| [[Extremwert|max]] || {pseudo_registration_max} || {user_editcount_max} || {user_editcount_ns0_all_time_max} || {user_editcount_ns0_last_year_max}
+|-
+| [[Mittelwert]] || – || {user_editcount_mean:.0f} || {user_editcount_ns0_all_time_mean:.0f} || {user_editcount_ns0_last_year_mean:.0f}
+|}}

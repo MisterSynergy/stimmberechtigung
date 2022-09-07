@@ -1,0 +1,22 @@
+Benutzeraccounts mit [[Wikipedia:Stimmberechtigung|Allgemeiner Stimmberechtigung]]:
+
+<p style="font-size:3rem; text-align:center;"><span id="msynbot-stimmberechtigung-cnt">{cnt}</span></p>
+
+Stand: <span id="msynbot-stimmberechtigung-date" data-utc-timestamp="{timestamp}">{timestamp_formatted}</span>.
+
+== Mehr Einblick ==
+=== Statistiken ===
+{table_wikitext}
+
+=== Zeitlicher Verlauf der Zahl stimmberechtigter Benutzeraccounts ===
+<div style="text-align:center">{{{{Benutzer:MsynBot/Stimmberechtigung/time_series}}}}</div>
+
+=== Stimmberechtigte Benutzeraccounts nach Anmeldejahr ===
+Für ab dem 22. Dezember 2005 registrierte Benutzeraccounts kann das Anmeldedatum direkt aus der Datenbank abgefragt werden. Für {registration_unknown} ältere Benutzeraccounts ist diese Information nicht verfügbar; für diese wurde stattdessen der Zeitstempel des ersten Edits als „Anmeldedatum“ verwendet.
+
+<div style="text-align:center">{{{{Benutzer:MsynBot/Stimmberechtigung/account_registration_year}}}}</div>
+
+== Hinweise ==
+Das Skript bildet im Wesentlichen die Kriterien für die Erlangung der Allgemeinen Stimmberechtigung nach [[Wikipedia:Stimmberechtigung]] ab. Im Gegensatz zum [https://stimmberechtigung.toolforge.org/ Tool zur Prüfung der Stimmberechtigung] werden für die Länge eines Jahres allerdings fest 365 Tage und für die Länge eines Monats fest 30 Tage angenommen. Der Unterschied dürfte zwar marginal sein, jedoch sollte so eine konsistentere Zeitreihe der Zahl stimmberechtigter Accounts entstehen.
+
+Das zugrundeliegende [[Python (Programmiersprache)|Python-Skript]] wird täglich ausgeführt. Es läuft auf [[:wikitech:Portal:Toolforge|Toolforge]] im <code>msynbot</code>-Toolaccount mit Python 3.9.2 in einer [[:wikitech:Help:Toolforge/Kubernetes|Kubernetes-Umgebung]]. Zusätzlich benötigte Programmbibliotheken  sind <code>[[Matplotlib|matplotlib]]</code>, <code>[https://dev.mysql.com/doc/connector-python/en/ mysql-connector-python]</code>, <code>[[Pandas (Software)|pandas]]</code>, <code>[https://docs.python-requests.org/en/latest/ requests]</code> sowie das Bot-Framework <code>[[Wikipedia:Pywikibot|pywikibot]]</code>. Der Quelltext des Skriptes ist [[Benutzer:MsynBot/Stimmberechtigung/sourcecode|hier]] einsehbar.
