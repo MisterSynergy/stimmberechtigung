@@ -19,10 +19,17 @@ spec:
           containers:
           - name: stimmberechtigung
             image: docker-registry.tools.wmflabs.org/toolforge-python39-sssd-base:latest
+            resources:
+              requests:
+                memory: "100Mi"
+                cpu: "100m"
+              limits:
+                memory: "200Mi"
+                cpu: "100m"
             command: [ "/data/project/msynbot/pywikibot_tasks/stimmberechtigung/venv/bin/python3" ]
             args: [ "/data/project/shared/pywikibot/stable/pwb.py", "/data/project/msynbot/pywikibot_tasks/stimmberechtigung/stimmberechtigung.py" ]
             workingDir: /data/project/msynbot/pywikibot_tasks/stimmberechtigung
             env:
             - name: HOME
               value: /data/project/msynbot
-          restartPolicy: OnFailure
+          restartPolicy: Never
