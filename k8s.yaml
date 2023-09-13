@@ -33,5 +33,5 @@ spec:
               value: /data/project/shared/pywikibot/stable
             workingDir: /data/project/msynbot/pywikibot_tasks/stimmberechtigung
             command: [ "venv/bin/python3" ]
-            args: [ "stimmberechtigung.py" ]
+            args: [ "main.py" ]
           restartPolicy: Never
