@@ -1,7 +1,7 @@
 """
 Author:   https://de.wikipedia.org/wiki/Benutzer:MisterSynergy
 License:  MIT license
-Version:  2021-11-10
+Version:  2023-09-14
 Task:     update statistics related to “Allgemeine Stimmberechtigung” in German Wikipedia
 See also: https://de.wikipedia.org/wiki/Benutzer:MisterSynergy/Stimmberechtigung
 """
@@ -12,10 +12,10 @@ from os.path import expanduser
 from time import gmtime, strftime, time
 from typing import Any, Optional, Union
 
+import mariadb
 import matplotlib.pyplot as plt
 import pandas as pd
 import pywikibot as pwb
-from mysql.connector import FieldType, MySQLConnection
 
 
 NS0_EDITS_ALL = 200
@@ -33,12 +33,12 @@ STATISTICS_TEMPLATE = './statistics_table.template'
 
 class Replica:
     def __init__(self) -> None:
-        self.replica = MySQLConnection(
+        self.replica = mariadb.connect(
             host='dewiki.analytics.db.svc.wikimedia.cloud',
             database='dewiki_p',
-            option_files=f'{expanduser("~")}/replica.my.cnf'
+            default_file=f'{expanduser("~")}/replica.my.cnf'
         )
-        self.cursor = self.replica.cursor()
+        self.cursor = self.replica.cursor(dictionary=True)
 
     def __enter__(self):
         return self.cursor
@@ -73,32 +73,20 @@ class Plot:
         plt.close(self.fig)
 
 
-def query_dewiki(query:str) -> tuple[list[tuple[Any]], tuple[str], list[str]]:
+def query_dewiki(query:str) -> list[dict[str, Any]]:
     with Replica() as db_cursor:
         db_cursor.execute(query)
-
         result = db_cursor.fetchall()
-        column_names = db_cursor.column_names
 
-        columns_to_convert = []
-        for desc in db_cursor.description:
-            if FieldType.get_info(desc[1]) in [ 'VAR_STRING', 'STRING' ]: # some are clearly missing here
-                columns_to_convert.append(desc[0])
-
-    return result, column_names, columns_to_convert
+    return result
 
 
-def query_dewiki_to_dataframe(query:str, convert_strings:bool=True) -> pd.DataFrame:
-    result, column_names, columns_to_convert = query_dewiki(query)
+def query_dewiki_to_dataframe(query:str) -> pd.DataFrame:
+    result = query_dewiki(query)
 
     df = pd.DataFrame(
-        data=result,
-        columns=column_names
+        data=result
     )
-
-    if convert_strings is True:
-        for column in columns_to_convert:
-            df[column] = df[column].str.decode('utf8')
 
     return df
 
@@ -106,9 +94,9 @@ def query_dewiki_to_dataframe(query:str, convert_strings:bool=True) -> pd.DataFr
 def first_query(minor_timestamp:int) -> pd.DataFrame:
     query = f"""SELECT
   user_id,
-  user_name,
+  CONVERT(user_name USING utf8) AS user_name,
   user_editcount,
-  user_registration,
+  CONVERT(user_registration USING utf8) AS user_registration,
   COUNT(rev_id) AS user_editcount_ns0_last_year
 FROM
   revision_userindex
@@ -169,20 +157,20 @@ GROUP BY
 
 def get_first_timestamp(user_id:int) -> pd._libs.tslibs.timestamps.Timestamp:
     query = f"""SELECT
-      MIN(rev_timestamp)
+      CONVERT(MIN(rev_timestamp) USING utf8) AS min_rev_timestamp
     FROM
       revision_userindex
         JOIN actor_revision ON rev_actor=actor_id
     WHERE
       actor_user={user_id:d}"""
 
-    result, _, _ = query_dewiki(query)
+    result = query_dewiki(query)
 
     if len(result) == 0 or len(result[0]) == 0:
         raise RuntimeWarning()
 
     dt = pd.to_datetime(
-        arg=int(result[0][0].decode('utf8')),
+        arg=int(result[0].get('min_rev_timestamp', 0)),
         format='%Y%m%d%H%M%S'
     )
 

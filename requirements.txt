@@ -3,6 +3,7 @@ charset-normalizer==2.0.7
 cycler==0.11.0
 idna==3.3
 kiwisolver==1.3.2
+mariadb==1.0.11
 matplotlib==3.4.3
 mysql-connector-python==8.0.27
 numpy==1.21.4
