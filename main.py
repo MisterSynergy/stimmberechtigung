@@ -417,7 +417,7 @@ def get_statistics_data(df:pd.DataFrame) -> dict[str, Union[float, int, str]]:
 
     statistics:dict[str, Union[float, int, str]] = {}
     for key in keys:
-        s = str(df[key].describe(datetime_is_numeric=True))
+        s = str(df[key].describe())
         for line in s.split('\n'):
             if line.startswith('Name: '):
                 continue
